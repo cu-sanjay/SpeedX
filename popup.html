@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeedX</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0e0e10;
+    --bg-surface: #161619;
+    --bg-elevated: #1c1c20;
+    --border: #27272b;
+    --text: #e4e4e7;
+    --text-muted: #71717a;
+    --accent: #f0f0f0;
+    --accent-hot: #ff6b35;
+    --accent-dim: rgba(255,107,53,0.12);
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    --radius: 3px;
+  }
+
+  body {
+    width: 300px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header .logo {
+    width: 18px;
+    height: 18px;
+    fill: var(--accent-hot);
+  }
+  .header h1 {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header .video-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: var(--radius);
+  }
+
+  /* ── Speed Display ── */
+  .speed-display {
+    padding: 20px 16px 12px;
+    text-align: center;
+  }
+  .speed-value {
+    font-family: var(--mono);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -2px;
+    transition: color 0.1s;
+  }
+  .speed-value.hot { color: var(--accent-hot); }
+  .speed-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── Slider ── */
+  .slider-section {
+    padding: 8px 16px 14px;
+  }
+  .slider-track {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--accent-hot);
+    border: none;
+    cursor: grab;
+    box-shadow: 0 0 8px rgba(255,107,53,0.35);
+    transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(1.15);
+    cursor: grabbing;
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ── Preset Grid ── */
+  .presets {
+    padding: 0 16px 14px;
+  }
+  .presets-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .preset-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 0;
+    cursor: pointer;
+    transition: all 0.08s ease;
+    text-align: center;
+  }
+  .preset-btn:hover {
+    color: var(--accent);
+    background: var(--bg-elevated);
+    border-color: #3f3f46;
+  }
+  .preset-btn.active {
+    color: var(--accent-hot);
+    background: var(--accent-dim);
+    border-color: var(--accent-hot);
+  }
+
+  /* ── Fine Control ── */
+  .fine-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px 14px;
+  }
+  .fine-btn {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 36px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.08s;
+  }
+  .fine-btn:hover {
+    color: var(--accent);
+    border-color: #3f3f46;
+  }
+  .fine-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .reset-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-hot);
+    background: var(--accent-dim);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: var(--radius);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.08s;
+  }
+  .reset-btn:hover {
+    background: rgba(255,107,53,0.2);
+  }
+
+  /* ── Footer / Shortcuts ── */
+  .footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .shortcuts {
+    display: flex;
+    gap: 10px;
+  }
+  .shortcut {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+  .key {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1px 5px;
+    font-size: 9px;
+    color: var(--text);
+  }
+  .version {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #3f3f46;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+    </svg>
+    <h1>Velocity</h1>
+  </div>
+  <div class="video-count" id="videoCount">0 videos</div>
+</div>
+
+<!-- Speed Display -->
+<div class="speed-display">
+  <div class="speed-value" id="speedValue">1.00</div>
+  <div class="speed-label">playback rate</div>
+</div>
+
+<!-- Slider -->
+<div class="slider-section">
+  <div class="slider-track">
+    <input type="range" id="speedSlider" min="0.0625" max="20" step="0.05" value="1">
+  </div>
+  <div class="slider-labels">
+    <span>0.06x</span>
+    <span>1x</span>
+    <span>5x</span>
+    <span>10x</span>
+    <span>20x</span>
+  </div>
+</div>
+
+<!-- Presets -->
+<div class="presets">
+  <div class="presets-label">Presets</div>
+  <div class="preset-grid" id="presetGrid">
+    <!-- Row 1 -->
+    <button class="preset-btn" data-speed="0.25">0.25</button>
+    <button class="preset-btn" data-speed="0.5">0.5</button>
+    <button class="preset-btn active" data-speed="1">1×</button>
+    <button class="preset-btn" data-speed="1.5">1.5</button>
+    <button class="preset-btn" data-speed="2">2×</button>
+    <!-- Row 2 -->
+    <button class="preset-btn" data-speed="3">3×</button>
+    <button class="preset-btn" data-speed="4">4×</button>
+    <button class="preset-btn" data-speed="8">8×</button>
+    <button class="preset-btn" data-speed="10">10×</button>
+    <button class="preset-btn" data-speed="16">16×</button>
+  </div>
+</div>
+
+<!-- Fine Control -->
+<div class="fine-control">
+  <button class="fine-btn" id="decBig" title="-1">«</button>
+  <button class="fine-btn" id="decSmall" title="-0.1">‹</button>
+  <div class="fine-label">±STEP</div>
+  <button class="fine-btn" id="incSmall" title="+0.1">›</button>
+  <button class="fine-btn" id="incBig" title="+1">»</button>
+  <button class="reset-btn" id="resetBtn">RST 1×</button>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="shortcuts">
+    <div class="shortcut"><span class="key">⇧</span><span class="key">&gt;</span> faster</div>
+    <div class="shortcut"><span class="key">⇧</span><span class="key">&lt;</span> slower</div>
+    <div class="shortcut"><span class="key">⇧</span><span class="key">/</span> reset</div>
+  </div>
+  <div class="version">v1.0</div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

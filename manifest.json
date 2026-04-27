@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "SpeedX: Video Speed Controller for YouTube, Coursera, Udemy & More",
+  "version": "1.0.0",
+  "description": "Speed up or slow down any video from 0.1x to 20x. Works on YouTube, Coursera, Udemy, LinkedIn Learning, and more.",
+  
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
